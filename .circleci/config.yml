@@ -1,7 +1,6 @@
 version: 2.1
 jobs:
   build_and_test:
-    docker:
       - image: node:14-alpine
     steps:
       - checkout
@@ -19,7 +18,7 @@ jobs:
           command: yarn test --coverage
   deploy:
     docker:
-      - image: node:14-alpine
+      - image: circleci/node:14.18
     steps:
       - checkout
       - restore_cache: # special step to restore the dependency cache
@@ -34,19 +33,9 @@ jobs:
       - run:
           name: Installing deployment dependencies
           command: |
-            apk --no-cache --update add \
-            less \
-            groff \
-            jq \
-            curl \
-            python \
-            py-pip
-      - run:
-          name: Installing awsebcli
-          command: |
-            pip install --upgrade pip \
-            awsebcli \
-            awscli
+            sudo apt-get -y -qq update
+            sudo apt-get install python3-pip python3-dev build-essential
+            sudo pip3 install awsebcli
       - run:
           name: Deploying
           command: eb deploy Dockerfrontend-env
