@@ -1,0 +1,9 @@
+branch-defaults:
+  master:
+    environment: Dockerfrontend-env
+global:
+  application_name: docker-frontend
+  default_ec2_keyname: Dockerfrontend-env
+  default_platform: Docker running on 64bit Amazon Linux 2/3.4.7
+  default_region: us-east-2
+  sc: git

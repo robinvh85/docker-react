@@ -1,11 +1,10 @@
 version: 2.1
 jobs:
-  build:
+  build_and_test:
     docker:
       - image: node:14-alpine
     steps:
       - checkout
-      - run:
       - restore_cache: # special step to restore the dependency cache
           key: dependency-cache-{{ checksum "yarn.lock" }}
       - run:
@@ -18,7 +17,27 @@ jobs:
       - run:
           name: Run test
           command: yarn test --coverage
-# workflows:
-#   setup_and_test:
-#     jobs:
-#       - build
+  deploy:
+    docker:
+      - image: node:14-alpine
+    steps:
+      - checkout
+      - restore_cache: # special step to restore the dependency cache
+          key: dependency-cache-{{ checksum "yarn.lock" }}
+      - run:
+          name: Setup Dependencies
+          command: yarn install
+      - save_cache: # special step to save the dependency cache
+          key: dependency-cache-{{ checksum "yarn.lock" }}
+          paths:
+            - ./node_modules
+      - run:
+          name: Deploying
+          command: eb deploy Dockerfrontend-env
+workflows:
+  # setup_and_test:
+  #   jobs:
+  #     - build_and_test
+  deploy_to_eb:
+    jobs:
+      - deploy
