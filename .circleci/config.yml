@@ -34,10 +34,19 @@ jobs:
       - run:
           name: Installing deployment dependencies
           command: |
-            sudo apt-get -y -qq update
-            sudo apt-get install python-pip python-dev build-essential
-            sudo pip install --upgrade setuptools
-            sudo pip install awsebcli --upgrade
+            apk --no-cache --update add \
+            less \
+            groff \
+            jq \
+            curl \
+            python \
+            py-pip
+      - run:
+          name: Installing awsebcli
+          command: |
+            pip install --upgrade pip \
+            awsebcli \
+            awscli
       - run:
           name: Deploying
           command: eb deploy Dockerfrontend-env
