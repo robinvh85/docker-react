@@ -5,27 +5,20 @@ jobs:
       - image: node:14-alpine
     steps:
       - checkout
-      - setup_remote_docker:
-          version: 20.10.7
-      - run:
-        - name: build image
-        - command: docker build -t robinvh/frontend -f Dockerfile.dev .
-      - run:
-        - name: test
-        - command: docker run robinvh/frontend yarn test -- --coverage  
+      # - run:
       # - restore_cache: # special step to restore the dependency cache
       #     key: dependency-cache-{{ checksum "yarn.lock" }}
-      # - run:
-      #     name: Setup Dependencies
-      #     command: yarn install
+      - run:
+          name: Setup Dependencies
+          command: yarn install
       # - save_cache: # special step to save the dependency cache
       #     key: dependency-cache-{{ checksum "yarn.lock" }}
       #     paths:
       #       - ./node_modules
-      # - run:
-      #     name: Run test
-      #     command: yarn test -- --coverage
-workflows:
-  setup_and_test:
-    jobs:
-      - build
+      - run:
+          name: Run test
+          command: yarn test -- --coverage
+# workflows:
+#   setup_and_test:
+#     jobs:
+#       - build
