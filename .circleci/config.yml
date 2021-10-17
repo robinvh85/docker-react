@@ -1,36 +1,36 @@
 version: 2.1
 jobs:
-  build_and_test:
-    docker:
-      - image: node:14-alpine
-    steps:
-      - checkout
-      - restore_cache: # special step to restore the dependency cache
-          key: dependency-cache-{{ checksum "yarn.lock" }}
-      - run:
-          name: Setup Dependencies
-          command: yarn install
-      - save_cache: # special step to save the dependency cache
-          key: dependency-cache-{{ checksum "yarn.lock" }}
-          paths:
-            - ./node_modules
-      - run:
-          name: Run test
-          command: yarn test --coverage
+  # build_and_test:
+  #   docker:
+  #     - image: node:14-alpine
+  #   steps:
+  #     - checkout
+  #     - restore_cache: # special step to restore the dependency cache
+  #         key: dependency-cache-{{ checksum "yarn.lock" }}
+  #     - run:
+  #         name: Setup Dependencies
+  #         command: yarn install
+  #     - save_cache: # special step to save the dependency cache
+  #         key: dependency-cache-{{ checksum "yarn.lock" }}
+  #         paths:
+  #           - ./node_modules
+  #     - run:
+  #         name: Run test
+  #         command: yarn test --coverage
   deploy:
     docker:
       - image: circleci/node:14.18
     steps:
       - checkout
-      - restore_cache: # special step to restore the dependency cache
-          key: dependency-cache-{{ checksum "yarn.lock" }}
+      # - restore_cache: # special step to restore the dependency cache
+      #     key: dependency-cache-{{ checksum "yarn.lock" }}
       - run:
           name: Setup Dependencies
           command: yarn install
-      - save_cache: # special step to save the dependency cache
-          key: dependency-cache-{{ checksum "yarn.lock" }}
-          paths:
-            - ./node_modules
+      # - save_cache: # special step to save the dependency cache
+      #     key: dependency-cache-{{ checksum "yarn.lock" }}
+      #     paths:
+      #       - ./node_modules
       - run:
           name: Installing deployment dependencies
           command: |
